@@ -7,6 +7,7 @@ const AdminDAO = require('../models/AdminDAO');
 const CategoryDAO = require('../models/CategoryDAO');
 const ProductDAO = require('../models/ProductDAO');
 const OrderDAO = require('../models/OrderDAO');
+const CustomerDAO = require('../models/CustomerDAO');
 
 // login
 router.post('/login', async function (req, res) {
@@ -107,6 +108,17 @@ router.put('/orders/status/:id', JwtUtil.checkToken, async function (req, res) {
   const newStatus = req.body.status;
   const result = await OrderDAO.update(_id, newStatus);
   res.json(result);
+});
+// customer
+router.get('/customers', JwtUtil.checkToken, async function (req, res) {
+  const customers = await CustomerDAO.selectAll();
+  res.json(customers);
+});
+// order
+router.get('/orders/customer/:cid', JwtUtil.checkToken, async function (req, res) {
+  const _cid = req.params.cid;
+  const orders = await OrderDAO.selectByCustID(_cid);
+  res.json(orders);
 });
 });
 module.exports = router;
